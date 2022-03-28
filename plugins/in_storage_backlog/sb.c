@@ -567,6 +567,7 @@ static int cb_queue_chunks(struct flb_input_instance *in,
                 /* We are removing this chunk reference from this specific backlog
                  * queue but we need to leave it in the remainder queues.
                  */
+                cio_chunk_down(chunk_instance->chunk);
                 sb_remove_chunk_from_segregated_backlogs(chunk_instance->chunk, ctx);
 
                 /* check our limits */
