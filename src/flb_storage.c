@@ -555,6 +555,8 @@ int flb_storage_create(struct flb_config *ctx)
         if (!ctx->storage_bl_mem_limit) {
             ctx->storage_bl_mem_limit = flb_strdup(FLB_STORAGE_BL_MEM_LIMIT);
         }
+
+        in->mem_buf_limit = flb_utils_size_to_bytes(ctx->storage_bl_mem_limit);
     }
 
     /* Create streams for input instances */
