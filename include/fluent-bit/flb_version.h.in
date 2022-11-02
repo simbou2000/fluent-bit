@@ -46,7 +46,7 @@ static inline void flb_version()
     printf("Fluent Bit v%s | NIGHTLY_BUILD=%s - DO NOT USE IN PRODUCTION!\n",
            FLB_VERSION_STR, STR(FLB_NIGHTLY_BUILD));
 #else
-    printf("Fluent Bit v%s (Patch 1)\n", FLB_VERSION_STR);
+    printf("Fluent Bit v%s (Patch 2)\n", FLB_VERSION_STR);
 #endif
     printf("Git commit: %s\n", FLB_GIT_HASH);
 

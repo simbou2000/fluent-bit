@@ -84,6 +84,7 @@ if ! docker build \
     --build-arg FLB_TD="$FLB_TD" \
     --build-arg FLB_NIGHTLY_BUILD="$FLB_NIGHTLY_BUILD" \
     --build-arg FLB_JEMALLOC="$FLB_JEMALLOC" \
+    --build-arg FLB_OUT_PGSQL="Off" \
     $FLB_ARG \
     -t "$MAIN_IMAGE" \
     -f "$IMAGE_CONTEXT_DIR/Dockerfile" \
