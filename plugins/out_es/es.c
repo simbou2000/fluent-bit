@@ -769,7 +769,9 @@ static int elasticsearch_error_check(struct flb_elasticsearch *ctx,
                             goto done;
                         }
                         /* Check for errors other than version conflict (document already exists) */
-                        if (item_val.via.i64 != 409) {
+                        /* Error code "201" can be mixed with 409 and this cause this check to indicate */
+                        /*  an error occurred when 201 means "created" */
+                        if (item_val.via.i64 != 409 && item_val.via.i64 != 201) {
                             check = FLB_TRUE;
                             goto done;
                         }
