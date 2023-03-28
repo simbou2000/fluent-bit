@@ -147,7 +147,8 @@ int flb_tail_mult_process_first(time_t now,
                                 char *buf, size_t size,
                                 struct flb_time *out_time,
                                 struct flb_tail_file *file,
-                                struct flb_tail_config *ctx)
+                                struct flb_tail_config *ctx,
+                                size_t processed_bytes)
 {
     int ret;
     size_t off;
@@ -172,6 +173,7 @@ int flb_tail_mult_process_first(time_t now,
 
     /* Remark as first multiline message */
     file->mult_firstline = FLB_TRUE;
+    file->mult_start_offset = file->offset + processed_bytes;
 
     /* Validate obtained time, if not set, set the current time */
     if (flb_time_to_nanosec(out_time) == 0L) {
@@ -307,7 +309,7 @@ int flb_tail_mult_process_content(time_t now,
             file->mult_firstline_append = FLB_FALSE;
 
         flb_tail_mult_process_first(now, out_buf, out_size, &out_time,
-                                    file, ctx);
+                                    file, ctx, processed_bytes);
         return FLB_TAIL_MULT_MORE;
     }
 
@@ -402,6 +404,9 @@ int flb_tail_mult_flush(msgpack_sbuffer *mp_sbuf, msgpack_packer *mp_pck,
     if (file->config->path_key != NULL) {
         map_size++;
     }
+    if (file->config->offset_key != NULL) {
+        map_size++;
+    }
     msgpack_pack_map(mp_pck, map_size);
 
     /* Append Path_Key ? */
@@ -415,6 +420,14 @@ int flb_tail_mult_flush(msgpack_sbuffer *mp_sbuf, msgpack_packer *mp_pck,
 
     data = file->mult_sbuf.data;
     bytes = file->mult_sbuf.size;
+
+    /* Append offset_key ? */
+    if (file->config->offset_key != NULL) {
+        msgpack_pack_str(mp_pck, flb_sds_len(file->config->offset_key));
+        msgpack_pack_str_body(mp_pck, file->config->offset_key,
+                              flb_sds_len(file->config->offset_key));
+        msgpack_pack_uint64(mp_pck, file->mult_start_offset);
+    }
 
     msgpack_unpacked_init(&result);
     msgpack_unpacked_init(&cont);

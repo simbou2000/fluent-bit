@@ -490,7 +490,6 @@ static int process_content(struct flb_tail_file *file, size_t *bytes)
 
             /* No multiline */
             if (ret == FLB_TAIL_MULT_NA) {
-
                 flb_tail_mult_flush(out_sbuf, out_pck, file, ctx);
 
                 flb_time_get(&out_time);

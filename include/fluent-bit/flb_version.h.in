@@ -46,7 +46,7 @@ static inline void flb_version()
     printf("Fluent Bit v%s | NIGHTLY_BUILD=%s - DO NOT USE IN PRODUCTION!\n",
            FLB_VERSION_STR, STR(FLB_NIGHTLY_BUILD));
 #else
-    printf("Fluent Bit v%s (Patch 1)\n", FLB_VERSION_STR);
+    printf("Fluent Bit v%s (Patch 2)\n", FLB_VERSION_STR);
 #endif
     printf("Git commit: %s\n", FLB_GIT_HASH);
 
@@ -78,7 +78,7 @@ static inline void flb_version_banner()
             "%s\n", bold_color, FLB_VERSION_STR, STR(FLB_NIGHTLY_BUILD), reset_color);
 #else
     fprintf(stderr,
-            "%sFluent Bit v%s (Patch 1)%s\n", bold_color, FLB_VERSION_STR, reset_color);
+            "%sFluent Bit v%s (Patch 2)%s\n", bold_color, FLB_VERSION_STR, reset_color);
 #endif
     fprintf(stderr, "* %sCopyright (C) 2015-2022 The Fluent Bit Authors%s\n",
             copyright_color, reset_color);

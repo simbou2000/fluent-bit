@@ -62,6 +62,7 @@ struct flb_tail_file {
     int mult_firstline_append;  /* bool: mult firstline appendable ?     */
     int mult_skipping;          /* skipping because ignode_older than ?  */
     int mult_keys;              /* total number of buffered keys         */
+    int64_t mult_start_offset;  /* file offset where multiline starts    */
 
 
     int mult_records;           /* multiline records counter mult_sbuf   */
