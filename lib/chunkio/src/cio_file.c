@@ -399,6 +399,15 @@ static int mmap_file(struct cio_ctx *ctx, struct cio_chunk *ch, size_t size)
 
         cf->data_size = 0;
 
+        /* Delete the corrupted file */
+        cio_file_native_close(cf);
+        ret = cio_file_native_delete(cf);
+
+        if (ret != CIO_OK) {
+            cio_log_error(ch->ctx,
+                          ch->st->name, ch->name);
+        }
+
         return CIO_CORRUPTED;
     }
 
