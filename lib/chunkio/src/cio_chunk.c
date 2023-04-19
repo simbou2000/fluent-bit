@@ -250,6 +250,24 @@ int cio_chunk_get_content_copy(struct cio_chunk *ch,
     return CIO_ERROR;
 }
 
+void cio_chunk_skip_crc(struct cio_chunk *ch, int state)
+{
+    struct cio_file *cf;
+    crc_t tmp;
+
+    if (ch->st->type == CIO_STORE_FS) {
+        cf = ch->backend;
+        /* Force a crc calculation if not skipped and reset flag was set */
+        if (ch->ctx->options.flags & CIO_CHECKSUM && state == CIO_FALSE && cf->crc_reset == CIO_TRUE) {
+            cf->crc_cur = cio_crc32_init();
+            cio_file_calculate_checksum(cf, &tmp);
+            cf->crc_cur = tmp;
+            cf->crc_reset = CIO_FALSE;
+        }
+        cf->skip_crc = state;
+    }
+}
+
 size_t cio_chunk_get_content_end_pos(struct cio_chunk *ch)
 {
     int type;

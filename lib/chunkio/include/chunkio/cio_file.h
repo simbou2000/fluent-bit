@@ -47,6 +47,7 @@ struct cio_file {
     char *st_content;
     crc_t crc_cur;            /* crc: current value calculated */
     int crc_reset;            /* crc: must recalculate from the beginning ? */
+    int skip_crc;             /* crc: temporarily skip crc calculation */
 };
 
 size_t cio_file_real_size(struct cio_file *cf);

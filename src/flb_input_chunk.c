@@ -1880,3 +1880,8 @@ void flb_input_chunk_update_output_instances(struct flb_input_chunk *ic,
         }
     }
 }
+
+void flb_input_chunk_skip_crc(struct flb_input_chunk *ic, int state)
+{
+    cio_chunk_skip_crc(ic->chunk, state);
+}

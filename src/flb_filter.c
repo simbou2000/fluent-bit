@@ -78,6 +78,9 @@ void flb_filter_do(struct flb_input_chunk *ic,
     struct mk_list *head;
     struct flb_filter_instance *f_ins;
     struct flb_input_instance *i_ins = ic->in;
+    struct cio_chunk *ch;
+    struct cio_file *cf;
+    int crc_skipped = CIO_FALSE;
 
     /* For the incoming Tag make sure to create a NULL terminated reference */
     ntag = flb_malloc(tag_len + 1);
@@ -139,6 +142,11 @@ void flb_filter_do(struct flb_input_chunk *ic,
             if (ret == FLB_FILTER_MODIFIED) {
                 /* all records removed, no data to continue processing */
                 if (out_size == 0) {
+                    /* Delay crc calculation */
+                    if (crc_skipped == CIO_FALSE) {
+                        crc_skipped = CIO_TRUE;
+                        flb_input_chunk_skip_crc(ic, crc_skipped);
+                    }
                     /* reset data content length */
                     flb_input_chunk_write_at(ic, write_at, "", 0);
 
@@ -186,6 +194,11 @@ void flb_filter_do(struct flb_input_chunk *ic,
                     ic->total_records = pre_records + in_records;
 #endif
                 }
+                /* Delay crc calculation */
+                if (crc_skipped == CIO_FALSE) {
+                    crc_skipped = CIO_TRUE;
+                    flb_input_chunk_skip_crc(ic, crc_skipped);
+                }
                 ret = flb_input_chunk_write_at(ic, write_at,
                                                out_buf, out_size);
                 if (ret == -1) {
@@ -208,6 +221,11 @@ void flb_filter_do(struct flb_input_chunk *ic,
                 flb_free(out_buf);
             }
         }
+    }
+
+    /* crc was skipped, recalculate */
+    if (crc_skipped == CIO_TRUE) {
+        flb_input_chunk_skip_crc(ic, CIO_FALSE);
     }
 
     flb_free(ntag);

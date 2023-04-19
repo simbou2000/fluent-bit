@@ -916,7 +916,7 @@ int cio_file_write(struct cio_chunk *ch, const void *buf, size_t count)
                       old_size, new_size);
     }
 
-    if (ch->ctx->options.flags & CIO_CHECKSUM) {
+    if (ch->ctx->options.flags & CIO_CHECKSUM && cf->skip_crc == CIO_FALSE) {
         update_checksum(cf, (unsigned char *) buf, count);
     }
 

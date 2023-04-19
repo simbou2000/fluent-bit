@@ -61,6 +61,7 @@ int cio_chunk_sync(struct cio_chunk *ch);
 int cio_chunk_get_content(struct cio_chunk *ch, char **buf, size_t *size);
 int cio_chunk_get_content_copy(struct cio_chunk *ch,
                                void **out_buf, size_t *out_size);
+void cio_chunk_skip_crc(struct cio_chunk *ch, int state);
 
 ssize_t cio_chunk_get_content_size(struct cio_chunk *ch);
 ssize_t cio_chunk_get_real_size(struct cio_chunk *ch);
