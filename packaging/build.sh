@@ -9,16 +9,19 @@ FLB_DISTRO=${FLB_DISTRO:-}
 FLB_OUT_DIR=${FLB_OUT_DIR:-}
 FLB_NIGHTLY_BUILD=${FLB_NIGHTLY_BUILD:-}
 FLB_JEMALLOC=${FLB_JEMALLOC:-On}
+FLB_RELEASE=${FLB_RELEASE:-On}
+FLB_DEBUG=${FLB_DEBUG:-Off}
 
 # Use this to pass special arguments to docker build
 FLB_ARG=${FLB_ARG:-}
 
-while getopts "v:d:b:t:o:" option
+while getopts "v:d:b:t:o:g:r:" option
 do
         case "${option}"
         in
             d) FLB_DISTRO=${OPTARG};;
             o) FLB_OUT_DIR=${OPTARG};;
+            g) FLB_DEBUG=${OPTARG};;
             *) echo "Unknown option";;
         esac
 done
@@ -29,6 +32,10 @@ if [ -z "$FLB_DISTRO" ]; then
     echo "                 ^    "
     echo "                 | ubuntu/20.04"
     exit 1
+fi
+
+if [ "${FLB_DEBUG,,}" = "on" ]; then
+  FLB_RELEASE="Off"
 fi
 
 # Prepare output directory
@@ -74,6 +81,8 @@ echo "CMAKE_INSTALL_PREFIX  => $CMAKE_INSTALL_PREFIX"
 echo "FLB_TD                => $FLB_TD"
 echo "FLB_NIGHTLY_BUILD     => $FLB_NIGHTLY_BUILD"
 echo "FLB_JEMALLOC          => $FLB_JEMALLOC"
+echo "FLB_RELEASE           => $FLB_RELEASE"
+echo "FLB_DEBUG             => $FLB_DEBUG"
 
 export DOCKER_BUILDKIT=1
 
@@ -84,6 +93,8 @@ if ! docker build \
     --build-arg FLB_TD="$FLB_TD" \
     --build-arg FLB_NIGHTLY_BUILD="$FLB_NIGHTLY_BUILD" \
     --build-arg FLB_JEMALLOC="$FLB_JEMALLOC" \
+    --build-arg FLB_RELEASE="$FLB_RELEASE" \
+    --build-arg FLB_DEBUG="$FLB_DEBUG" \
     --build-arg FLB_OUT_PGSQL="Off" \
     $FLB_ARG \
     -t "$MAIN_IMAGE" \

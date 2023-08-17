@@ -23,6 +23,12 @@ RUN yum -y update && \
     yum install -y cmake3 && \
     yum clean all
 
+ARG FLB_RELEASE=On
+ENV FLB_RELEASE=$FLB_RELEASE
+
+ARG FLB_DEBUG=Off
+ENV FLB_DEBUG=$FLB_DEBUG
+
 ARG FLB_OUT_PGSQL=On
 ENV FLB_OUT_PGSQL=$FLB_OUT_PGSQL
 
@@ -41,6 +47,12 @@ RUN yum -y update && \
     rpm -ivh epel-release-latest-7.noarch.rpm && \
     yum install -y cmake3 && \
     yum clean all
+
+ARG FLB_RELEASE=On
+ENV FLB_RELEASE=$FLB_RELEASE
+
+ARG FLB_DEBUG=Off
+ENV FLB_DEBUG=$FLB_DEBUG
 
 # There are no postgresql libraries available for this target
 ARG FLB_OUT_PGSQL=Off
@@ -68,6 +80,12 @@ RUN yum -y update && \
                    cyrus-sasl-lib openssl openssl-libs openssl-devel libyaml-devel && \
     yum clean all
 
+ARG FLB_RELEASE=On
+ENV FLB_RELEASE=$FLB_RELEASE
+
+ARG FLB_DEBUG=Off
+ENV FLB_DEBUG=$FLB_DEBUG
+
 ARG FLB_OUT_PGSQL=On
 ENV FLB_OUT_PGSQL=$FLB_OUT_PGSQL
 
@@ -90,6 +108,12 @@ RUN yum -y update && \
                    postgresql-libs postgresql-devel postgresql-server postgresql \
                    cyrus-sasl-lib openssl openssl-libs openssl-devel libyaml-devel && \
     yum clean all
+
+ARG FLB_RELEASE=On
+ENV FLB_RELEASE=$FLB_RELEASE
+
+ARG FLB_DEBUG=Off
+ENV FLB_DEBUG=$FLB_DEBUG
 
 ARG FLB_OUT_PGSQL=On
 ENV FLB_OUT_PGSQL=$FLB_OUT_PGSQL
@@ -116,7 +140,6 @@ ARG CFLAGS
 ARG CMAKE_INSTALL_PREFIX=/opt/td-agent-bit/
 ARG CMAKE_INSTALL_SYSCONFDIR=/etc/
 ARG FLB_TD=On
-ARG FLB_RELEASE=On
 ARG FLB_TRACE=On
 ARG FLB_SQLDB=On
 ARG FLB_HTTP_SERVER=On
@@ -127,6 +150,7 @@ ARG FLB_JEMALLOC=On
 RUN cmake3 -DCMAKE_INSTALL_PREFIX="$CMAKE_INSTALL_PREFIX" \
            -DCMAKE_INSTALL_SYSCONFDIR="$CMAKE_INSTALL_SYSCONFDIR" \
            -DFLB_RELEASE="$FLB_RELEASE" \
+           -DFLB_DEBUG="$FLB_DEBUG" \
            -DFLB_TRACE="$FLB_TRACE" \
            -DFLB_TD="$FLB_TD" \
            -DFLB_SQLDB="$FLB_SQLDB" \
@@ -139,4 +163,4 @@ RUN cmake3 -DCMAKE_INSTALL_PREFIX="$CMAKE_INSTALL_PREFIX" \
            ../
 
 VOLUME [ "/output" ]
-CMD [ "/bin/bash", "-c", "make -j 4 && cpack3 -G RPM && cp *.rpm /output/" ]
+CMD [ "/bin/bash", "-c", "make -j 4 && cpack3 -G RPM && cp *.rpm /output/ && cp /tmp/fluent-bit/build/bin/td-agent-bit /output/" ]
