@@ -60,7 +60,7 @@ struct flb_hs *flb_hs_create(const char *listen, const char *tcp_port,
                              struct flb_config *config)
 {
     int vid;
-    char tmp[32];
+    char tmp[96];
     struct flb_hs *hs;
 
     hs = flb_calloc(1, sizeof(struct flb_hs));

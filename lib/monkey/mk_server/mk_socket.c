@@ -254,7 +254,7 @@ int mk_socket_bind(int socket_fd, const struct sockaddr *addr,
 
     ret = bind(socket_fd, addr, addrlen);
     if( ret == -1 ) {
-        mk_warn("Error binding socket");
+        mk_warn("Error binding socket: %s", strerror(errno));
         return ret;
     }
 
